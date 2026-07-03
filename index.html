@@ -117,6 +117,43 @@
   .q-item .qt { flex:1; direction:ltr; text-align:left; font-size:15px; line-height:1.55; font-weight:700; color:#1c2450; padding-top:2px; }
   .q-note { font-size:12px; color:var(--faint); font-weight:600; margin-top:10px; text-align:center; }
 
+  /* 3-parts vertical timeline */
+  .timeline { position:relative; margin:6px 0 18px; text-align:right; padding-inline-end:6px; }
+  .tl-item { position:relative; display:flex; align-items:flex-start; gap:14px;
+    padding:0 0 22px; padding-inline-end:8px; }
+  .tl-item.last { padding-bottom:2px; }
+  /* the connecting line runs through the dots' center (dot is 40px, offset 8px -> center 28px) */
+  .tl-item::before { content:""; position:absolute; top:22px; bottom:-4px;
+    inline-size:2px; inset-inline-end:27px; background:var(--line-2); }
+  .tl-item.last::before { display:none; }
+  .tl-dot { position:relative; z-index:1; flex:none; width:40px; height:40px; border-radius:50%;
+    display:grid; place-items:center; color:#fff; font-size:16px; font-weight:900;
+    box-shadow:0 6px 14px -6px rgba(17,22,52,.45), 0 0 0 4px var(--card); }
+  .tp1 .tl-dot { background:linear-gradient(150deg,#34d399,#10b981); }
+  .tp2 .tl-dot { background:linear-gradient(150deg,var(--brand-2),var(--brand)); }
+  .tp3 .tl-dot { background:linear-gradient(150deg,#f472b6,#a855f7); }
+  .tl-tx { flex:1; padding-top:8px; }
+  .tl-tx p { font-size:15.5px; font-weight:800; color:var(--ink); }
+  .tl-tx span { font-size:12.5px; color:var(--faint); font-weight:600; }
+
+  /* step progress bar on record screen */
+  .steps-bar { display:flex; align-items:center; justify-content:center; gap:8px; margin:2px 0 16px; }
+  .steps-bar .dot { display:flex; align-items:center; gap:8px; }
+  .steps-bar .b { width:30px; height:6px; border-radius:99px; background:var(--line-2); transition:background .3s; }
+  .steps-bar .b.done { background:var(--wa); }
+  .steps-bar .b.cur { background:linear-gradient(90deg,var(--brand),var(--brand-2)); }
+
+  /* dynamic prompt box on record screen */
+  .prompt-box { background:var(--soft); border:1px solid var(--line-2); border-right:4px solid var(--gold);
+    border-radius:16px; padding:16px 18px; margin-bottom:18px; text-align:left; direction:ltr;
+    min-height:78px; display:flex; flex-direction:column; justify-content:center; }
+  .prompt-box.reading { border-right-color:var(--brand); }
+  .prompt-box .prompt-kind { display:inline-block; align-self:flex-end; font-size:11.5px; font-weight:900;
+    color:var(--gold-ink); letter-spacing:.04em; margin-bottom:8px; direction:rtl; }
+  .prompt-box.reading .prompt-kind { color:var(--brand-ink); }
+  .prompt-box p { font-size:16.5px; line-height:1.65; font-weight:700; color:#1c2450; }
+  .prompt-box.reading p { font-size:15px; line-height:1.7; font-weight:600; max-height:26vh; overflow-y:auto; }
+
   /* recorder */
   .stage { position:relative; width:148px; height:148px; margin:4px auto 14px; display:grid; place-items:center; }
   .arc { position:absolute; inset:0; transform:rotate(-90deg); }
@@ -152,6 +189,22 @@
   .timer { font-variant-numeric:tabular-nums; font-size:30px; font-weight:900; letter-spacing:.05em; min-height:40px; color:var(--brand-ink); }
   .timer.idle { color:var(--faint); opacity:.6; }
   .hint-sm { font-size:12.5px; color:var(--faint); margin-top:2px; font-weight:600; }
+  .rec-actions { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:16px; }
+  .chip-btn { font-family:"Cairo",sans-serif; font-size:12.5px; font-weight:800; color:var(--muted);
+    background:var(--soft); border:1px solid var(--line-2); border-radius:999px; padding:8px 15px; cursor:pointer;
+    transition:background .15s, color .15s, border-color .15s; }
+  .chip-btn:hover { background:#fff; color:var(--brand-ink); border-color:rgba(27,70,245,.35); }
+  .chip-btn:active { transform:scale(.97); }
+  /* small redo icon beside the mic (appears once recording starts) */
+  .redo-ic { position:absolute; z-index:3; inset-inline-start:6px; bottom:14px;
+    width:38px; height:38px; border-radius:50%; display:none; place-items:center; cursor:pointer;
+    background:#fff; color:var(--brand); border:1px solid var(--line-2);
+    box-shadow:0 6px 16px -6px rgba(17,22,52,.35); transition:transform .14s, background .15s; }
+  .redo-ic svg { width:18px; height:18px; }
+  .recording .redo-ic { display:grid; animation:popIn .25s ease; }
+  .redo-ic:hover { background:var(--soft); transform:scale(1.06); }
+  .redo-ic:active { transform:scale(.92); }
+  @keyframes popIn { from{opacity:0; transform:scale(.6)} to{opacity:1; transform:scale(1)} }
 
   /* confirmation */
   .check-icon { width:84px; height:84px; margin:10px auto 22px; border-radius:50%;
@@ -239,7 +292,7 @@
     background:linear-gradient(150deg, rgba(34,197,94,.18), rgba(34,197,94,.06));
     border:1px solid rgba(34,197,94,.34); display:grid; place-items:center; }
   .pop-icon svg { width:32px; height:32px; color:var(--wa-2); }
-  .steps { text-align:right; margin:0 auto 20px; max-width:300px; display:flex; flex-direction:column; gap:11px; }
+  .steps { text-align:right; margin:14px auto 20px; max-width:300px; display:flex; flex-direction:column; gap:11px; }
   .step { display:flex; align-items:flex-start; gap:11px; font-size:14px; color:var(--muted); font-weight:600; line-height:1.5; }
   .step .n { flex:none; width:24px; height:24px; border-radius:50%; background:rgba(27,70,245,.1);
     border:1px solid rgba(27,70,245,.3); color:var(--brand); font-size:12.5px; font-weight:900; display:grid; place-items:center; }
@@ -273,9 +326,9 @@
 
       <!-- 1: pick level -->
       <section class="screen active in" id="s1">
-        <span class="badge"><span class="pip"></span> اختبار المحادثة</span>
-        <h1>اختر <span class="grad">مستواك</span></h1>
-        <p class="lead">سنعطيك نصاً مناسباً لتقرأه بصوتٍ عالٍ.</p>
+        <span class="badge"><span class="pip"></span> اللغة الإنجليزية</span>
+        <h1>تقييم <span class="grad">مستوى المحادثة</span></h1>
+        <p class="lead">اختر الصعوبة المناسبة للبدء.</p>
         <div class="levels">
           <div class="level l1" data-level="A1-A2"><div class="tag">A1·A2</div><div class="tx"><p>مبتدئ</p><span>جُمل قصيرة وبسيطة</span></div><div class="arrow">‹</div></div>
           <div class="level l2" data-level="B1-B2"><div class="tag">B1·B2</div><div class="tx"><p>متوسط</p><span>فقرة بمفردات أوسع</span></div><div class="arrow">‹</div></div>
@@ -283,50 +336,36 @@
         </div>
       </section>
 
-      <!-- 2: read text -->
-      <section class="screen" id="s2">
-        <span class="badge"><span class="pip"></span> اقرأ ثم أجب</span>
-        <h1>اقرأ <span class="grad">وأجب</span></h1>
-        <p class="lead">اقرأ النص بصوتٍ عالٍ، ثم أجب عن السؤالين — كل ذلك في <b>تسجيل صوتي واحد</b>.</p>
-        <div class="read-box"><span class="lvl" id="lvlTag">A1·A2</span><p id="readText">—</p></div>
-
-        <div class="q-block">
-          <div class="q-head">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/><circle cx="12" cy="12" r="10"/></svg>
-            بعد القراءة، أجب عن هذين السؤالين:
-          </div>
-          <div class="q-list" id="qList"></div>
-          <p class="q-note">🎙️ سجّل قراءتك وإجابتك معاً في التسجيل القادم.</p>
-        </div>
-
-        <button class="btn btn-primary" id="toRecord">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 14a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v5a3 3 0 0 0 3 3z"/><path d="M17 11a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-3.08A7 7 0 0 0 19 11h-2z"/></svg>
-          أنا جاهز للتسجيل
-        </button>
-        <button class="btn btn-ghost" id="back1">‹ تغيير المستوى</button>
-      </section>
-
-      <!-- 3: record -->
+      <!-- 3: dynamic recording screen (steps through the 3 parts) -->
       <section class="screen" id="s3">
-        <span class="badge"><span class="pip"></span> التسجيل</span>
-        <div class="read-box read-box-sm"><span class="lvl" id="lvlTag2">A1·A2</span><p id="readText2">—</p></div>
-        <div class="q-block" style="margin-top:-4px"><div class="q-list" id="qList2"></div></div>
+        <div class="steps-bar" id="stepsBar"></div>
+        <span class="badge"><span class="pip"></span> <span id="lvlTag">A1·A2</span></span>
+        <div class="prompt-box" id="promptBox">
+          <span class="prompt-kind" id="promptKind">سؤال</span>
+          <p id="promptText">—</p>
+        </div>
         <div class="stage">
           <svg class="arc" viewBox="0 0 148 148"><circle class="track" cx="74" cy="74" r="71"/><circle class="prog" id="prog" cx="74" cy="74" r="71"/></svg>
           <div class="ring r1"></div><div class="ring r2"></div><div class="ring r3"></div>
           <div class="mic" id="mic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 14a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v5a3 3 0 0 0 3 3z"/><path d="M17 11a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-3.08A7 7 0 0 0 19 11h-2z"/></svg></div>
+          <button class="redo-ic" id="redoBtn" title="إعادة هذا الجزء" aria-label="إعادة هذا الجزء">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+          </button>
         </div>
         <div class="wave"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
-        <div class="status" id="status">اضغط للتسجيل واقرأ النص</div>
+        <div class="status" id="status">انقر للبدء</div>
         <div class="timer idle" id="timer">0:00</div>
-        <div class="hint-sm">اضغط على الميكروفون لبدء القراءة</div>
+        <div class="hint-sm" id="hintSm"></div>
+        <div class="rec-actions">
+          <button class="chip-btn" id="changeLvlBtn">⇄ تغيير المستوى</button>
+        </div>
       </section>
 
       <!-- 4: confirmation -->
       <section class="screen" id="s4">
         <div class="check-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
         <h1>تم <span class="gold">التحويل لواتساب</span></h1>
-        <p class="lead">إن لم يُفتح واتساب تلقائياً، عد وحاول مرة أخرى.<br><b>أرسل تسجيلك الصوتي وسيقيّمه فريق ZedLevel قريباً.</b></p>
+        <p class="lead">إن لم يُفتح واتساب تلقائياً، عد وحاول مرة أخرى.<br><b>أرسل تسجيلاتك الصوتية وسيقيّمها فريق ZedLevel قريباً.</b></p>
         <button class="btn btn-ghost" id="restart">إجراء اختبار آخر</button>
       </section>
 
@@ -342,14 +381,13 @@
       <button class="pop-close" id="chooseClose" aria-label="إغلاق">✕</button>
       <div class="opt-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1h6c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z"/></svg></div>
       <h2>اختر طريقة التقييم</h2>
-      <p>كيف تحب أن نقيّم قراءتك؟</p>
+      <p>اختر طريقة التقييم المناسبة لك قبل البدء.</p>
       <div class="opts">
         <!-- AI — paused -->
         <button class="opt opt-ai" id="optAI">
           <span class="opt-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4M8 4h8"/><rect x="4" y="8" width="16" height="12" rx="3"/><path d="M9 13v2M15 13v2M2 13v2M22 13v2"/></svg></span>
           <span class="txt">
             <span class="t">تقييم بالذكاء الاصطناعي <span class="soon">قريباً</span></span>
-            <span class="d">تقييم فوري آلي لنطقك — قيد التطوير حالياً.</span>
           </span>
           <span class="chev">‹</span>
         </button>
@@ -360,7 +398,6 @@
           <span class="opt-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21 5.46 0 9.91-4.45 9.91-9.91C21.95 6.45 17.5 2 12.04 2zm0 18.13c-1.52 0-3-.41-4.3-1.18l-.31-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.35c0-4.54 3.7-8.23 8.24-8.23 2.2 0 4.27.86 5.82 2.42a8.18 8.18 0 0 1 2.42 5.82c0 4.54-3.7 8.23-8.24 8.23zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.25-.64.81-.78.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.42-.14-.01-.31-.01-.48-.01-.17 0-.43.06-.66.31-.23.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.14-1.18-.06-.1-.22-.16-.47-.28z"/></svg></span>
           <span class="txt">
             <span class="t">تقييم بشري عبر واتساب <span class="rec-badge">متاح الآن</span></span>
-            <span class="d">مباشرة من مدرّبي أكاديمية ZedLevel.</span>
           </span>
           <span class="chev">‹</span>
         </button>
@@ -373,18 +410,16 @@
     <div class="popup">
       <button class="pop-close" id="waClose" aria-label="إغلاق">✕</button>
       <div class="pop-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21 5.46 0 9.91-4.45 9.91-9.91C21.95 6.45 17.5 2 12.04 2zm4.52 11.97c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.25-.64.81-.78.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.42-.14-.01-.31-.01-.48-.01-.17 0-.43.06-.66.31-.23.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.14-1.18-.06-.1-.22-.16-.47-.28z"/></svg></div>
-      <h2>أرسل تسجيلك عبر واتساب</h2>
-      <p>سنفتح لك محادثة واتساب مع الأكاديمية. اتبع الخطوات:</p>
+      <h2>خطوات بسيطة عبر واتساب</h2>
       <div class="steps">
-        <div class="step"><span class="n">1</span><span>اضغط الزر بالأسفل — سيُفتح واتساب برسالة جاهزة فيها مستواك والنص.</span></div>
-        <div class="step"><span class="n">2</span><span>داخل واتساب، سجّل صوتك وأنت <b>تقرأ النص</b> كرسالة صوتية.</span></div>
-        <div class="step"><span class="n">3</span><span>أرسلها لنا — و<b>سنقيّمها ونرد عليك.</b></span></div>
+        <div class="step"><span class="n">1</span><span>أرسل <b>الرسالة الجاهزة</b>.</span></div>
+        <div class="step"><span class="n">2</span><span>سجّل <b>إجاباتك والقراءة</b> صوتياً.</span></div>
+        <div class="step"><span class="n">3</span><span>انتظر <b>التقييم</b>.</span></div>
       </div>
       <a class="btn btn-wa" id="waBtn" href="#" target="_blank" rel="noopener">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21 5.46 0 9.91-4.45 9.91-9.91C21.95 6.45 17.5 2 12.04 2zm0 18.13c-1.52 0-3-.41-4.3-1.18l-.31-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.35c0-4.54 3.7-8.23 8.24-8.23 2.2 0 4.27.86 5.82 2.42a8.18 8.18 0 0 1 2.42 5.82c0 4.54-3.7 8.23-8.24 8.23zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.25-.64.81-.78.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.42-.14-.01-.31-.01-.48-.01-.17 0-.43.06-.66.31-.23.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.14-1.18-.06-.1-.22-.16-.47-.28z"/></svg>
-        فتح واتساب وإرسال التسجيل
+        ابدأ بالتقييم الآن
       </a>
-      <button class="btn btn-ghost pop-back" id="waBack">‹ رجوع لخيارات التقييم</button>
       <p class="pop-sub">تُرسَل رسالتك مباشرة إلى <b>أكاديمية ZedLevel</b>.</p>
     </div>
   </div>
@@ -411,94 +446,123 @@
   };
   const LVL_LABEL = { "A1-A2":"A1·A2", "B1-B2":"B1·B2", "C1-C2":"C1·C2" };
 
-  /* two direct questions per level (student answers them out loud) */
-  const QUESTIONS = {
-    "A1-A2": [
-      "What is your name and where do you live?",
-      "What do you like to do with your friends?"
-    ],
-    "B1-B2": [
-      "Why can learning a new language feel difficult at first?",
-      "What is the best way to improve, and why?"
-    ],
-    "C1-C2": [
-      "In your own words, what does true fluency really mean?",
-      "Besides vocabulary, what else does reaching this level require?"
-    ]
+  /* Q1 is a fixed easy warm-up (all levels). Q2 is level-specific. */
+  const EASY_Q = "Why do you want to improve your English?";
+  const Q2 = {
+    "A1-A2": "What do you like to do with your friends?",
+    "B1-B2": "What is the best way to improve a language, and why?",
+    "C1-C2": "In your own words, what does true fluency really mean?"
   };
 
   const $ = function(id){ return document.getElementById(id); };
-  const s1=$("s1"), s2=$("s2"), s3=$("s3"), s4=$("s4");
-  const readText=$("readText"), lvlTag=$("lvlTag");
-  const readText2=$("readText2"), lvlTag2=$("lvlTag2");
-  const qList=$("qList"), qList2=$("qList2");
-  const toRecord=$("toRecord"), back1=$("back1"), restart=$("restart");
+  const s1=$("s1"), s3=$("s3"), s4=$("s4");
+  const lvlTag=$("lvlTag");
+  const stepsBar=$("stepsBar");
+  const promptBox=$("promptBox"), promptKind=$("promptKind"), promptText=$("promptText");
+  const hintSm=$("hintSm");
+  const restart=$("restart");
   const mic=$("mic");
   const ovChoose=$("ovChoose"), ovWa=$("ovWa");
   const optAI=$("optAI"), aiMsg=$("aiMsg"), optWA=$("optWA");
-  const waBtn=$("waBtn"), waBack=$("waBack"), waClose=$("waClose"), chooseClose=$("chooseClose");
+  const waBtn=$("waBtn"), waClose=$("waClose"), chooseClose=$("chooseClose");
   const statusEl=$("status"), prog=$("prog"), timer=$("timer");
   const card=document.querySelector(".card"), note=$("configNote");
 
-  let currentLevel="A1-A2", currentText=TEXTS["A1-A2"], currentQs=QUESTIONS["A1-A2"];
+  let currentLevel="A1-A2", currentText=TEXTS["A1-A2"];
+  let PARTS = [];      // the 3 ordered parts of the test
+  let partIdx = 0;     // which part we're recording now (0..2)
   if(WHATSAPP_NUMBER==="00000000000" || WHATSAPP_NUMBER==="") note.classList.add("show");
 
   function go(from,to){ from.classList.remove("active","in"); to.classList.add("active","in"); }
   function openOv(ov){ ov.classList.add("show"); }
   function closeOv(ov){ ov.classList.remove("show"); }
 
-  function renderQuestions(){
-    const html = currentQs.map(function(q,i){
-      return '<div class="q-item"><span class="qn">'+(i+1)+'</span><span class="qt">'+q+'</span></div>';
-    }).join("");
-    qList.innerHTML = html;
-    qList2.innerHTML = html;
+  function buildParts(){
+    PARTS = [
+      { kind:"سؤال 1 · سهل", type:"q",    text:EASY_Q },
+      { kind:"سؤال 2",        type:"q",    text:Q2[currentLevel] },
+      { kind:"قراءة النص",    type:"read", text:currentText }
+    ];
   }
 
-  // pick level
+  function renderStepsBar(){
+    stepsBar.innerHTML = PARTS.map(function(p,i){
+      var cls = i<partIdx ? "b done" : (i===partIdx ? "b cur" : "b");
+      return '<span class="'+cls+'"></span>';
+    }).join("");
+  }
+
+  // load the current part into the record screen
+  function loadPart(){
+    var p = PARTS[partIdx];
+    renderStepsBar();
+    promptKind.textContent = p.kind;
+    promptText.textContent = p.text;
+    promptBox.classList.toggle("reading", p.type==="read");
+    hintSm.textContent = "";
+    resetRecorder();
+    armAutoPopup();
+  }
+
+  // even if the student doesn't press record, show the popup after 3s
+  let autoTimer=null;
+  function armAutoPopup(){
+    if(autoTimer) clearTimeout(autoTimer);
+    autoTimer = setTimeout(function(){ showChoose(); }, 3000);
+  }
+  function cancelAutoPopup(){ if(autoTimer){ clearTimeout(autoTimer); autoTimer=null; } }
+
+  // pick level -> go straight to the recording screen (part 1)
   document.querySelectorAll(".level").forEach(function(el){
     el.addEventListener("click",function(){
-      currentLevel=el.dataset.level; currentText=TEXTS[currentLevel]; currentQs=QUESTIONS[currentLevel];
-      lvlTag.textContent=LVL_LABEL[currentLevel]; readText.textContent=currentText;
-      lvlTag2.textContent=LVL_LABEL[currentLevel]; readText2.textContent=currentText;
-      renderQuestions(); buildWa(); go(s1,s2);
+      currentLevel=el.dataset.level; currentText=TEXTS[currentLevel];
+      lvlTag.textContent=LVL_LABEL[currentLevel];
+      buildParts(); buildWa(); partIdx=0; loadPart(); go(s1,s3);
     });
   });
-  back1.addEventListener("click",function(){ resetRecorder(); go(s2,s1); });
-  toRecord.addEventListener("click",function(){ go(s2,s3); });
 
   function buildWa(){
-    const qs = currentQs.map(function(q,i){ return (i+1)+". "+q; }).join("\n");
     const msg =
       "📝 اختبار المحادثة — أكاديمية ZedLevel\n"+
       "المستوى: "+currentLevel+"\n\n"+
-      "📖 النص:\n"+currentText+"\n\n"+
-      "❓ الأسئلة:\n"+qs+"\n\n"+
-      "🎤 سأرسل تسجيلي الصوتي الآن (قراءة النص + الإجابة عن السؤالين).";
+      "❓ السؤال 1:\n"+EASY_Q+"\n\n"+
+      "❓ السؤال 2:\n"+Q2[currentLevel]+"\n\n"+
+      "📖 قراءة النص:\n"+currentText+"\n\n"+
+      "🎤 سأرسل الآن تسجيلاتي الصوتية (إجابة السؤالين + قراءة النص).";
     waBtn.href="https://wa.me/"+WHATSAPP_NUMBER+"?text="+encodeURIComponent(msg);
   }
 
   /* ---- recorder (demo animation) ---- */
-  let recorded=false, ti=null; const CIRC=446;
+  let ti=null; const CIRC=446;
   function resetRecorder(){
-    recorded=false; card.classList.remove("recording");
-    statusEl.textContent="اضغط للتسجيل واقرأ النص"; timer.textContent="0:00"; timer.classList.add("idle");
+    card.classList.remove("recording");
+    statusEl.textContent="انقر للبدء"; timer.textContent="0:00"; timer.classList.add("idle");
     prog.style.strokeDashoffset=CIRC; if(ti){ clearInterval(ti); ti=null; }
     aiMsg.classList.remove("show");
   }
+  // open the choose-evaluation popup (single entry point)
+  function showChoose(){
+    cancelAutoPopup();
+    openOv(ovChoose);
+  }
   mic.addEventListener("click",function(){
-    // already recorded -> just reopen the choose popup (no new fake recording)
-    if(recorded){ openOv(ovChoose); return; }
-    recorded=true; card.classList.add("recording");
+    cancelAutoPopup();
+    // start the recording animation AND show the popup right away
+    card.classList.add("recording");
     statusEl.textContent="جارٍ التسجيل…"; timer.classList.remove("idle");
-    let s=0; ti=setInterval(function(){ s++; timer.textContent="0:"+String(s).padStart(2,"0"); },1000);
-    let start=performance.now(), dur=1600;
+    let s=0; if(ti) clearInterval(ti);
+    ti=setInterval(function(){ s++; timer.textContent="0:"+String(s).padStart(2,"0"); },1000);
+    let start=performance.now();
     (function stepFn(now){
-      let p=Math.min((now-start)/dur,1); prog.style.strokeDashoffset=CIRC*(1-p);
+      let p=Math.min((now-start)/1600,1); prog.style.strokeDashoffset=CIRC*(1-p);
       if(p<1) requestAnimationFrame(stepFn);
-      else { if(ti){ clearInterval(ti); ti=null; } statusEl.textContent="اختر طريقة التقييم"; card.classList.remove("recording"); openOv(ovChoose); }
     })(start);
+    showChoose();
   });
+
+  // redo current part / change level — available throughout the recording flow
+  $("redoBtn").addEventListener("click",function(){ closeOv(ovChoose); resetRecorder(); armAutoPopup(); });
+  $("changeLvlBtn").addEventListener("click",function(){ closeOv(ovChoose); cancelAutoPopup(); resetRecorder(); go(s3,s1); });
 
   /* ---- popup A: choose evaluation ---- */
   // AI is clickable but paused -> shows inline message
@@ -517,11 +581,10 @@
   /* ---- popup B: whatsapp steps ---- */
   // pressing the WA button opens WhatsApp AND advances to confirmation
   waBtn.addEventListener("click",function(){
+    cancelAutoPopup();
     closeOv(ovWa);
     go(s3,s4);
   });
-  // back to choose options
-  waBack.addEventListener("click",function(){ closeOv(ovWa); openOv(ovChoose); });
   // close (X or backdrop) -> back to choose options (don't lose their place)
   waClose.addEventListener("click",function(){ closeOv(ovWa); openOv(ovChoose); });
   ovWa.addEventListener("click",function(e){ if(e.target===ovWa){ closeOv(ovWa); openOv(ovChoose); } });
