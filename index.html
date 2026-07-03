@@ -553,20 +553,17 @@
   });
 
   function buildWa(){
-    // discreet reference code — looks like an order/ref number to the
-    // student (they won't remove it), but encodes the source for you.
-    // e.g. source "1" -> "مرجع: #ZL-1"  |  direct -> "مرجع: #ZL-0"
-    var refVal = (SOURCE === "مباشر") ? "0" : SOURCE;
-    var refLine = "مرجع: #ZL-" + refVal;
+    // discreet reference code — only shown when a source code is present
+    // (e.g. ?1 -> "مرجع: #ZL-1"). Direct visits (no code) show no ref line.
+    var refLine = (SOURCE === "مباشر") ? "" : ("مرجع: #ZL-" + SOURCE + "\n");
     const msg =
-      "📝 اختبار المحادثة — أكاديمية ZedLevel\n"+
-      "المستوى: "+currentLevel+"\n\n"+
-      "❓ السؤال 1:\n"+EASY_Q+"\n\n"+
-      "❓ السؤال 2:\n"+Q2[currentLevel]+"\n\n"+
-      "📖 قراءة النص:\n"+currentText+"\n\n"+
-      "🎤 سأرسل الآن تسجيلاتي الصوتية (إجابة السؤالين + قراءة النص).\n\n"+
-      "———\n"+
-      refLine;
+      "تقييم مستوى المحادثة — أكاديمية ZedLevel\n"+
+      "المستوى: "+currentLevel+"\n"+
+      refLine + "\n"+
+      "السؤال 1:\n"+EASY_Q+"\n\n"+
+      "السؤال 2:\n"+Q2[currentLevel]+"\n\n"+
+      "فقرة القراءة:\n"+currentText+"\n\n"+
+      "🎤 سأرسل الآن تسجيلاتي الصوتية (إجابة السؤالين + قراءة النص).";
     waBtn.href="https://wa.me/"+WHATSAPP_NUMBER+"?text="+encodeURIComponent(msg);
   }
 
