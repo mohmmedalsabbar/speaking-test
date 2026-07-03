@@ -439,20 +439,29 @@
   const WHATSAPP_NUMBER = "966561350651";
 
   /* ---------------------------------------------------------------
-     SOURCE / REFERRAL TAG — give each promoter their own link:
-       speakingtest.zedlevel.app/?s=ahmed
-       speakingtest.zedlevel.app/?s=sara
-     The tag is added to the WhatsApp message so you know who
-     referred each student. No setup needed — invent any ?s= value.
-     Also supports #s=ahmed. Falls back to "مباشر" (direct).
+     SOURCE / REFERRAL CODE — give each promoter a short numeric link.
+     Simplest form (recommended) — just a number after "?":
+       speaking.zedlevel.app/?1      -> المصدر: 1
+       speaking.zedlevel.app/?7      -> المصدر: 7
+     Also works:  ?s=1  ?source=1  #1  #s=1
+     You keep a table mapping 1..N to each promoter.
+     No value at all -> "مباشر" (direct).
      --------------------------------------------------------------- */
   function getSource(){
     try {
+      var raw = (location.search || "").replace(/^\?/, "");
+      var hash = (location.hash || "").replace(/^#/, "");
+      // 1) named param: s / source / ref / utm_source (in query or hash)
       var p = new URLSearchParams(location.search);
       var s = p.get("s") || p.get("source") || p.get("ref") || p.get("utm_source");
-      if(!s && location.hash){
-        var m = location.hash.match(/[#&]?(?:s|source|ref)=([^&]+)/);
-        if(m) s = decodeURIComponent(m[1]);
+      if(!s && hash){
+        var mh = hash.match(/(?:^|&)(?:s|source|ref)=([^&]+)/);
+        if(mh) s = decodeURIComponent(mh[1]);
+      }
+      // 2) bare form: ?1  or  #1  (first token, before any & or =)
+      if(!s){
+        var bare = (raw || hash).split("&")[0].split("=")[0];
+        if(bare) s = decodeURIComponent(bare);
       }
       s = (s || "").trim().slice(0, 40);
       return s || "مباشر";
