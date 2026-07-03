@@ -438,6 +438,28 @@
      ============================================================ */
   const WHATSAPP_NUMBER = "966561350651";
 
+  /* ---------------------------------------------------------------
+     SOURCE / REFERRAL TAG — give each promoter their own link:
+       speakingtest.zedlevel.app/?s=ahmed
+       speakingtest.zedlevel.app/?s=sara
+     The tag is added to the WhatsApp message so you know who
+     referred each student. No setup needed — invent any ?s= value.
+     Also supports #s=ahmed. Falls back to "مباشر" (direct).
+     --------------------------------------------------------------- */
+  function getSource(){
+    try {
+      var p = new URLSearchParams(location.search);
+      var s = p.get("s") || p.get("source") || p.get("ref") || p.get("utm_source");
+      if(!s && location.hash){
+        var m = location.hash.match(/[#&]?(?:s|source|ref)=([^&]+)/);
+        if(m) s = decodeURIComponent(m[1]);
+      }
+      s = (s || "").trim().slice(0, 40);
+      return s || "مباشر";
+    } catch(e){ return "مباشر"; }
+  }
+  const SOURCE = getSource();
+
   // reading texts per level
   const TEXTS = {
     "A1-A2": "My name is Sara. I live in Riyadh with my family. Every morning I drink tea and go to school. I like reading books and playing with my friends. On Friday, we visit my grandmother. She makes very good food. I am happy with my life.",
@@ -524,7 +546,8 @@
   function buildWa(){
     const msg =
       "📝 اختبار المحادثة — أكاديمية ZedLevel\n"+
-      "المستوى: "+currentLevel+"\n\n"+
+      "المستوى: "+currentLevel+"\n"+
+      "📍 المصدر: "+SOURCE+"\n\n"+
       "❓ السؤال 1:\n"+EASY_Q+"\n\n"+
       "❓ السؤال 2:\n"+Q2[currentLevel]+"\n\n"+
       "📖 قراءة النص:\n"+currentText+"\n\n"+
